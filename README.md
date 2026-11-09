@@ -108,6 +108,8 @@ Automated checks cover geometry, occlusion, stroke timing and frame-rate consist
 
 ## License and credits
 
+Developed by Benjamin Davenport with coding assistance from OpenAI Codex.
+
 Project code, procedural textures, geometry, and the app icon are **MIT licensed**. See [LICENSE](LICENSE), [CREDITS.md](CREDITS.md), and [CHANGELOG.md](CHANGELOG.md).
 
 Inspired by [gprem09/minecraft_pet_v2](https://github.com/gprem09/minecraft_pet_v2). This independent Windows app uses a custom Blender turtle with flat-color materials. The workstation wood pattern and fallback character are generated in code. See [CREDITS.md](CREDITS.md) for attribution.
