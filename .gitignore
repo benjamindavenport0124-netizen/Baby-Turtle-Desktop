@@ -1,0 +1,27 @@
+turtle.settings
+*.log
+Baby Turtle.exe
+dist/
+.local/
+*.tmp
+Thumbs.db
+Desktop.ini
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+strix_runs/
+assets/turtle.stl
+assets/oak-planks.jpg
+assets/turtle-texture-reference.png
+assets/turtle-look-reference.png
+/cad/
+*.blend1
+*.blend2
+restart-test.settings
+Turtle-v1.ps1
+turtle-preview.png
+previews/*
+!previews/Render-Motion.ps1

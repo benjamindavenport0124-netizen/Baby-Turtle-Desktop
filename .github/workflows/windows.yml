@@ -1,0 +1,47 @@
+name: Windows checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check upload contents for credentials and local files
+        shell: powershell
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Verify-UploadSafety.ps1
+      - name: Compile and check animations
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Turtle.ps1
+      - name: Check assistant and screenshot adapters
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Codex.ps1
+      - name: Check screen adventures
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Adventure.ps1
+      - name: Check procedural texture fallback
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Assets.ps1
+      - name: Check imported Blender materials and animation pivots
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-BlenderModel.ps1
+      - name: Check menu and restart handoff without relaunch
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Menu.ps1 -Headless
+          if ($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
+          powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Restart.ps1 -Headless
+      - name: Check startup error reporting
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Startup.ps1
+      - name: Build public beta package
+        shell: powershell
+        run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File '.\Package Release.ps1'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BabyTurtle-windows-beta
+          path: |
+            dist/**/*.zip
+            dist/**/*.sha256
