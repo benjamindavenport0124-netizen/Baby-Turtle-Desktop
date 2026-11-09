@@ -15,3 +15,4 @@ Initial Windows beta:
 - Imported the owner's separated Blender turtle and authored material colors. Added attachment pivots, closed the head attachment in the prepared copy, retained blinking, adapted ground contact, and included mesh/source assets in packages.
 
 - Fix activity-monitor UI blocking, atomically replaced session tracking, retained climbing rotation after dragging, and startup error reporting when logging fails; add regression and CI checks.
+- Preserve Blender export inputs, resolve active material colors, allow renamed materials, stage paired exports with rollback, and scan Python files for credential patterns.

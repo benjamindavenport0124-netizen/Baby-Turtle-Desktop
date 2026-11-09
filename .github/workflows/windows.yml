@@ -11,7 +11,7 @@ jobs:
           persist-credentials: false
       - name: Check upload contents for credentials and local files
         shell: powershell
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Verify-UploadSafety.ps1
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Verify-UploadSafety.ps1 -SelfTest
       - name: Compile and check animations
         shell: powershell
         run: powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Turtle.ps1

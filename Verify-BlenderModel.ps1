@@ -4,6 +4,7 @@ $flags=[Reflection.BindingFlags]'Instance,NonPublic,DeclaredOnly'
 function Field($object,$name) {$object.GetType().GetField($name,$flags)}
 function Assert($condition,$message) {if(-not $condition) {throw $message}}
 $data=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'assets\baby-turtle.mesh.json') -Raw | ConvertFrom-Json
+Assert ($data.preparedSourceSha256 -eq (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'assets\baby-turtle.blend') -Algorithm SHA256).Hash.ToLowerInvariant()) 'Prepared Blender project must match its declared hash.'
 $pet=New-Object TurtlePet
 try {
     $pet.LoadModel()

@@ -64,3 +64,19 @@ Removed unused ReverseQuads and the screenshot wrapper used only by tests; tests
 Added non-relaunch/headless menu and restart checks, plus startup diagnostics, to Windows CI. Local verification passed Turtle, Codex, Adventure, Assets, BlenderModel, Menu (-Headless), Restart (-Headless), Startup, and UploadSafety. A fresh staged release built and compiled successfully. These were ordinary local Windows runs, not an isolated disposable security sandbox; hosted CI execution is not yet verified. Synthetic screenshots and unlinked-target guards are covered, but live dummy-control focus-race scenarios remain a manual validation gap. No new exploit/security-clearance claim is made.
 
 Executable signing and immutable Action SHA pinning remain optional release hardening, not confirmed defects. Signing requires a signing identity; no certificate or account changes were made.
+
+
+### Second review follow-up — 8 November 2026
+
+Resolved the four authoring/scanner findings from repo-review-2/FINDINGS-DETAIL.md:
+
+- R1: resolved input and output paths are checked before scene changes or output writes, including existing file identity aliases. Exporting the supplied prepared project requires a separate `--output-dir`. Both artifacts are staged before publication; ordinary publication failures restore the previous pair. This does not promise a crash-atomic two-file transaction.
+- R2: material colors follow the active render-engine Material Output and supported Principled/RGB connections, ignoring disconnected nodes and inactive outputs. Unsupported mixed/textured graphs produce actionable errors.
+- R3: eye backing is derived from the dominant green head surface by area, independent of material names. Required part names remain unchanged.
+- R4: Python files now receive credential-content checks. The scanner's disposable Git fixture verifies benign Python passes and a synthetic token pattern fails without printing its value; Windows CI runs this self-test.
+
+Removed unused exporter bindings/imports. Original-input provenance is now named inputSourceSha256; preparedSourceSha256 identifies the saved project separately. The supplied mesh metadata was updated without changing geometry/colors or the Blender project. The runtime loader still accepts format version 1.
+
+Blender 5.2.3 tests passed using disposable copies: same-path refusal with unchanged input/JSON, disconnected RGB, supported linked RGB, active/inactive outputs, mixed-shader refusal, renamed materials, exported color checks, paired hashes, failed-save preservation, and rollback after an injected second-file publication error. Verify-UploadSafety -SelfTest passed locally. These are ordinary local correctness tests, not independent security validation or isolated-provider testing.
+
+The second review established no confirmed security vulnerability. Live dummy-control focus/modifier/relink delivery cases and accessibility-provider stalls remain validation gaps. The final UIA calls and fail-closed targeting were not changed by these exporter fixes. Hosted CI, fresh-machine compatibility, signing, and Action SHA pinning remain unverified or optional as previously documented.

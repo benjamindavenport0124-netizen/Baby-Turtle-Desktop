@@ -16,7 +16,7 @@ foreach($name in @('working.png','idle.png','climbTop.png')) {
 }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'previews\Render-Motion.ps1') -Destination (Join-Path $stage 'previews')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'docs\SECURITY_REVIEW.md') -Destination (Join-Path $stage 'docs')
-Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'tools\Export-BlenderModel.py') -Destination (Join-Path $stage 'tools')
+foreach($tool in @('Export-BlenderModel.py','Verify-BlenderExporter.py')) {Copy-Item -LiteralPath (Join-Path $PSScriptRoot ('tools\'+$tool)) -Destination (Join-Path $stage 'tools')}
 foreach($name in @('turtle.ico','baby-turtle.mesh.json','baby-turtle.blend')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot ('assets\'+$name)) -Destination (Join-Path $stage 'assets')
 }

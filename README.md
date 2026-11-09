@@ -76,9 +76,9 @@ See [SECURITY.md](SECURITY.md) and the [pre-upload security review](docs/SECURIT
 
 ## Development
 
-The active character comes from the owner's separated Blender model. `assets/baby-turtle.blend` is a prepared project copy with six animation pivots and ordinary flat-color materials; `assets/baby-turtle.mesh.json` contains its normalized geometry and material colors for the Windows renderer. Blinking, walking, typing, climbing, falling, and helping up use the same rigid-part animation system. No texture PNG is required for the character.
+The turtle is modeled in Blender with six separately animated parts. `assets/baby-turtle.blend` is a prepared project copy with six animation pivots and ordinary flat-color materials; `assets/baby-turtle.mesh.json` contains its normalized geometry and material colors for the Windows renderer. Blinking, walking, typing, climbing, falling, and helping up use the same rigid-part animation system. The character uses material colors, so no image texture is required.
 
-To regenerate the runtime mesh after editing the source, run Blender in background mode with `--factory-startup --disable-autoexec --background YOUR_MODEL.blend --python-exit-code 1 --python tools/Export-BlenderModel.py`. The exporter requires the six named parts, retains the input file, saves a prepared project copy, and removes unused reference images from that copy. It supports solid RGB/Principled material colors. Missing runtime mesh data uses the older procedural fallback; malformed mesh data is rejected.
+To regenerate the runtime mesh after editing the source, run Blender in background mode with `--factory-startup --disable-autoexec --background YOUR_MODEL.blend --python-exit-code 1 --python tools/Export-BlenderModel.py`. The exporter requires the six named parts and saves a prepared project copy for the app. It refuses to overwrite its input; when editing `assets/baby-turtle.blend`, add `-- --output-dir exported` to write the new files into a separate folder. It follows the active Material Output for solid Principled colors and linked RGB nodes; mixed or textured shader graphs are rejected. Material names can be changed. Eye backing uses the dominant green head surface. Exported JSON records `inputSourceSha256` for the original input and `preparedSourceSha256` for the saved Blender copy. Missing runtime mesh data uses a procedural fallback; malformed mesh data is rejected.
 
 The app compiles C# source using Windows PowerShell at startup. No npm installation or downloaded runtime dependency is needed. Close the executable before rebuilding its host; ordinary source edits only need **Restart turtle**.
 
@@ -92,14 +92,17 @@ powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-BlenderMod
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Verify-UploadSafety.ps1
 powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Menu.ps1
 powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Restart.ps1
+powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File .\Verify-Startup.ps1
 powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File ".\Package Release.ps1"
 ```
 
-Menu and restart checks briefly show native UI. Close any running turtle before the restart check. `Verify-Restart.ps1 -Relaunch` additionally exercises the real launcher and leaves a replacement app running. `Verify-Codex.ps1 -Live` optionally probes local Codex metadata without sending a prompt. Do not use live checks on hosted CI.
+Menu and restart checks briefly show native UI; use `-Headless` to check their logic without displaying the menu or relaunching the app. Close any running turtle before the restart check. `Verify-Restart.ps1 -Relaunch` additionally exercises the real launcher and leaves a replacement app running. `Verify-Codex.ps1 -Live` optionally probes local Codex metadata without sending a prompt. Do not use live checks on hosted CI.
 
-`Verify-UploadSafety.ps1` requires a Git checkout and checks files eligible for upload. It does not scan Git history or replace a dedicated secrets scanner.
+`Verify-UploadSafety.ps1` requires a Git checkout and checks files eligible for upload, including Python source. Add `-SelfTest` to verify credential detection and redacted reporting with disposable fixtures. It does not scan Git history or replace a dedicated secrets scanner.
 
-The Windows workflow checks the normal build and procedural texture fallback, then uploads a release ZIP artifact. `Package Release.ps1` uses an explicit file allowlist, checks the staged source, and creates a SHA-256 checksum under `dist`. It does not publish a GitHub Release.
+The Windows workflow runs the automated checks, including headless menu and restart checks and startup error reporting, then uploads a release ZIP artifact. `Package Release.ps1` uses an explicit file allowlist, checks the staged source, and creates a SHA-256 checksum under `dist`. It does not publish a GitHub Release.
+
+To test the exporter with Blender installed, run `blender --factory-startup --disable-autoexec --background --python-exit-code 1 --python tools/Verify-BlenderExporter.py`. It uses disposable input copies and checks file preservation and material graphs. This Blender check is separate from the Windows CI checks.
 
 Automated checks cover geometry, occlusion, stroke timing and frame-rate consistency, pointer reactions, route directions, falls and recovery, assistant event fixtures, screenshot payloads, menu structure, and restart cleanup. They do not establish microphone quality, actual attachment delivery, or compatibility with every version of Codex and ChatGPT. Fresh-machine testing is still needed.
 
@@ -107,6 +110,6 @@ Automated checks cover geometry, occlusion, stroke timing and frame-rate consist
 
 Project code, procedural textures, geometry, and the app icon are **MIT licensed**. See [LICENSE](LICENSE), [CREDITS.md](CREDITS.md), and [CHANGELOG.md](CHANGELOG.md).
 
-Inspired by [gprem09/minecraft_pet_v2](https://github.com/gprem09/minecraft_pet_v2). This is an independent native Windows implementation using the owner's Blender turtle and its material colors. The downloaded STL and old texture-reference images have been removed from the working tree and release packaging. The workstation wood pattern and fallback character are generated in code. Earlier Git commits or remote release assets may still contain retired files; cleanup has not rewritten history. See CREDITS.md for provenance.
+Inspired by [gprem09/minecraft_pet_v2](https://github.com/gprem09/minecraft_pet_v2). This independent Windows app uses a custom Blender turtle with flat-color materials. The workstation wood pattern and fallback character are generated in code. See [CREDITS.md](CREDITS.md) for attribution.
 
 Unofficial fan project; not affiliated with Mojang, Microsoft, or OpenAI.
